@@ -3,6 +3,8 @@ import { Store } from '@ngrx/store';
 import { selectCartItems } from 'src/app/cart/cart.selectors';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-navigation',
@@ -10,15 +12,22 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./navigation.component.scss'],
 })
 export class NavigationComponent implements OnInit {
-  isLogin = true;
+  isUserAuthenticated$!: Observable<boolean>;
+  isUserAuthenticatedAdmin$!: Observable<boolean>;
   cartItemCount!: number;
   showSearchBar = true;
+  showUserDropdown = false;
+  showAdminDropdown = false;
   constructor(
     private readonly router: Router,
     private readonly store: Store,
+    private readonly authService: AuthService,
   ) {}
 
   ngOnInit(): void {
+    this.isUserAuthenticated$ = this.authService.isUserAuthenticated();
+    this.isUserAuthenticatedAdmin$ = this.authService.isUserAdmin();
+
     this.router.events
       .pipe(
         filter(
@@ -27,7 +36,13 @@ export class NavigationComponent implements OnInit {
       )
       .subscribe((event: NavigationEnd) => {
         const currentRoute = event.url;
-        if (currentRoute === '/cart' || currentRoute === '/checkout') {
+        if (
+          currentRoute === '/cart' ||
+          currentRoute === '/checkout' ||
+          currentRoute === '/user-profile' ||
+          currentRoute === '/login' ||
+          currentRoute === '/signup'
+        ) {
           this.showSearchBar = false;
         } else {
           this.showSearchBar = true;
@@ -43,7 +58,25 @@ export class NavigationComponent implements OnInit {
     });
   }
 
+  toggleUserDropdown() {
+    this.showUserDropdown = !this.showUserDropdown;
+    this.showAdminDropdown = false;
+  }
+
+  toggleAdminDropdown() {
+    this.showAdminDropdown = !this.showAdminDropdown;
+    this.showUserDropdown = false;
+  }
+
   navigateTo(route: string) {
     this.router.navigate([`${route}`]);
+  }
+
+  userProfile() {
+    this.router.navigate(['user-profile']);
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

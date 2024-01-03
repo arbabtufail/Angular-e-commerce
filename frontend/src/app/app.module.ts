@@ -16,6 +16,9 @@ import { reducers, metaReducers } from '../app/reducer/index';
 import { ProductDetailsComponent } from './product/product-details/product-details.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { CheckoutComponent } from './checkout/checkout.component';
+import { SignupComponent } from './signup/signup.component';
+import { HttpClientModule } from '@angular/common/http';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +31,8 @@ import { CheckoutComponent } from './checkout/checkout.component';
     ProductDetailsComponent,
     CategoriesComponent,
     CheckoutComponent,
+    SignupComponent,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,6 +40,7 @@ import { CheckoutComponent } from './checkout/checkout.component';
     MaterialModule,
     FormsModule,
     CartModule,
+    HttpClientModule,
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks: {
