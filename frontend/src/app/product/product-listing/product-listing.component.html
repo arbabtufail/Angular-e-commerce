@@ -1,0 +1,14 @@
+<div class="product-list-container">
+  <div class="product-listing">
+    <ng-container *ngIf="filteredProducts.length > 0; else noProducts">
+      <app-product
+        *ngFor="let product of filteredProducts"
+        [product]="product"
+        (addItemEvent)="addItemToCart($event)"
+      ></app-product>
+    </ng-container>
+    <ng-template #noProducts>
+      <p>No product available.</p>
+    </ng-template>
+  </div>
+</div>
